@@ -2,7 +2,7 @@
 
 NightVision is Mobile Interactive Debugging System override `console.log`.
 
-![Image](screenshot.png)
+![Image](https://raw.githubusercontent.com/potato4d/nightvision/master/screenshot.png)
 
 ## Installation
 
