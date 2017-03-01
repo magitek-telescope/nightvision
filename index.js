@@ -4,7 +4,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var DEFAULT_LOG = "es_feature_symbol_default_log";
+var DEFAULT_LOG = Symbol("symbol_default_log");
+var DEFAULT_ERROR = Symbol("symbol_default_error");
 
 var NightVision = function () {
   function NightVision() {
@@ -14,6 +15,8 @@ var NightVision = function () {
   _createClass(NightVision, [{
     key: "init",
     value: function init() {
+      var _this = this;
+
       {
         var isBrowser = !(typeof process !== "undefined" && typeof require !== "undefined");
         if (!isBrowser) {
@@ -46,6 +49,8 @@ var NightVision = function () {
       }
 
       console[DEFAULT_LOG] = console.log;
+      console[DEFAULT_ERROR] = console.error;
+
       console.log = function () {
         var _console;
 
@@ -53,37 +58,58 @@ var NightVision = function () {
           args[_key] = arguments[_key];
         }
 
-        (_console = console)[DEFAULT_LOG].apply(_console, args);
-        var log = document.createElement("li");
-        log.innerText = "> ";
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = args[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var arg = _step.value;
-
-            log.innerText += JSON.stringify(arg, false, "\t") + " ";
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
+        var log = _this.createLog(args);
+        log.setAttribute("class", "nightvision_logs_log");
         $("#nightvision_logs #nightvision_logs_body").append(log);
         $("#nightvision_logs").scrollTop = "" + $("#nightvision_logs_body").clientHeight;
+        (_console = console)[DEFAULT_LOG].apply(_console, args);
       };
+
+      console.error = function () {
+        var _console2;
+
+        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        var error = _this.createLog(args);
+        error.setAttribute("class", "nightvision_logs_error");
+        $("#nightvision_logs #nightvision_logs_body").append(error);
+        $("#nightvision_logs").scrollTop = "" + $("#nightvision_logs_body").clientHeight;
+        (_console2 = console)[DEFAULT_ERROR].apply(_console2, args);
+      };
+    }
+  }, {
+    key: "createLog",
+    value: function createLog(args) {
+      var log = document.createElement("li");
+      log.innerText = "> ";
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = args[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var arg = _step.value;
+
+          log.innerText += JSON.stringify(arg, false, "\t") + " ";
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return log;
     }
   }, {
     key: "setStyle",
@@ -96,7 +122,7 @@ var NightVision = function () {
       font.setAttribute("rel", "stylesheet");
 
       var style = document.createElement("style");
-      style.innerText = "\n    #nightvision_logs{\n      position: fixed;\n      left: 0;\n      bottom: 0;\n      margin: 0;\n      padding: 0;\n      width: 100%;\n      height: 100px;\n      overflow: auto;\n      background: #111;\n      color: #fff;\n      font-weight: normal;\n      z-index: 100000000000000000000000000000000;\n      font-family: 'Source Code Pro', sans-serif;\n      -webkit-overflow-scrolling: touch;\n    }\n\n    #nightvision_logs #nightvision_logs_body{\n      list-style: none;\n      margin: 0;\n      padding: 0;\n    }\n\n    #nightvision_logs li{\n      padding: 10px;\n      border-bottom: solid 1px #999;\n    }\n    ".replace(/\n/g, "").replace(/  /g, "");
+      style.innerText = "\n    #nightvision_logs{\n      position: fixed;\n      left: 0;\n      bottom: 0;\n      margin: 0;\n      padding: 0;\n      width: 100%;\n      height: 100px;\n      overflow: auto;\n      background: #111;\n      color: #fff;\n      font-weight: normal;\n      z-index: 100000000000000000000000000000000;\n      font-family: 'Source Code Pro', sans-serif;\n      -webkit-overflow-scrolling: touch;\n    }\n\n    #nightvision_logs #nightvision_logs_body{\n      list-style: none;\n      margin: 0;\n      padding: 0;\n    }\n\n    #nightvision_logs li{\n      padding: 10px;\n      border-bottom: solid 1px #999;\n    }\n\n    #nightvision_logs #nightvision_logs_body li.nightvision_logs_error{\n      color: #ff0000;\n    }\n    ".replace(/\n/g, "").replace(/  /g, "");
 
       $("head").append(font);
       $("head").append(style);

@@ -1,4 +1,5 @@
-const DEFAULT_LOG = "es_feature_symbol_default_log";
+const DEFAULT_LOG   = Symbol("symbol_default_log");
+const DEFAULT_ERROR = Symbol("symbol_default_error");
 
 class NightVision{
   init(){
@@ -31,17 +32,33 @@ class NightVision{
       $("#nightvision_logs").style.bottom = "-70px";
     }
 
-    console[DEFAULT_LOG] = console.log;
+    console[DEFAULT_LOG]   = console.log;
+    console[DEFAULT_ERROR] = console.error;
+
     console.log = (...args) => {
-      console[DEFAULT_LOG](...args);
-      const log = document.createElement("li");
-      log.innerText = "> ";
-      for(let arg of args){
-        log.innerText += JSON.stringify(arg, false, "\t") + " ";
-      }
+      const log = this.createLog(args);
+      log.setAttribute("class", "nightvision_logs_log");
       $("#nightvision_logs #nightvision_logs_body").append(log);
       $("#nightvision_logs").scrollTop = `${$("#nightvision_logs_body").clientHeight}`;
+      console[DEFAULT_LOG](...args);
     }
+
+    console.error = (...args) => {
+      const error = this.createLog(args);
+      error.setAttribute("class", "nightvision_logs_error");
+      $("#nightvision_logs #nightvision_logs_body").append(error);
+      $("#nightvision_logs").scrollTop = `${$("#nightvision_logs_body").clientHeight}`;
+      console[DEFAULT_ERROR](...args);
+    }
+  }
+
+  createLog(args){
+    const log = document.createElement("li");
+    log.innerText = "> ";
+    for(let arg of args){
+      log.innerText += JSON.stringify(arg, false, "\t") + " ";
+    }
+    return log;
   }
 
   setStyle(){
@@ -78,6 +95,10 @@ class NightVision{
     #nightvision_logs li{
       padding: 10px;
       border-bottom: solid 1px #999;
+    }
+
+    #nightvision_logs #nightvision_logs_body li.nightvision_logs_error{
+      color: #ff0000;
     }
     `).replace(/\n/g, "").replace(/  /g, "");
 

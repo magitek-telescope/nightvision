@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>html,body{width: 100%;height: 200vh;margin: 0;padding: 0;}</style>
+</head>
+<body>
+  <p>
+    <textarea name="" id="" cols="30" rows="10">{
+  "test": "hoge"
+}</textarea><br>
+  <button id="log">Send JSON log.</button><br>
+  <button id="warn">Send JSON warn.</button><br>
+  <button id="error">Send JSON err.</button>
+  </p>
+  <script src="index.js"></script>
+  <script>
+    const nightvision = new NightVision;
+    nightvision.init();
+    const $ = e=>document.querySelector(e);
+
+    $("#log").addEventListener("click", ()=>{
+      console.log(JSON.parse($("textarea").value));
+    });
+
+    $("#warn").addEventListener("click", ()=>{
+      console.warn(JSON.parse($("textarea").value));
+    });
+
+    $("#error").addEventListener("click", ()=>{
+      console.error(JSON.parse($("textarea").value));
+    });
+  </script>
+</body>
+</html>
