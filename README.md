@@ -15,6 +15,6 @@ $ npm install -D nightvision
 ```
 require("nightvision").init() // Ready.
 
-consoe.log("text", 1, {hoge: 'aaa'}); // Support .log
-consoe.error("text", 1, {hoge: 'aaa'}); // Support .error
+console.log("text", 1, {hoge: 'aaa'}); // Support .log
+console.error("text", 1, {hoge: 'aaa'}); // Support .error
 ```
